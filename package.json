@@ -1,0 +1,25 @@
+{
+  "name": "cover-creator-cli",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "description": "Cover Creator por línea de comandos: renderiza carruseles (PNG/JPG) reutilizando los componentes React del portafolio, con estilo pixel-art opcional.",
+  "bin": { "cc": "bin/cc.mjs" },
+  "scripts": {
+    "build": "vite build",
+    "render": "node bin/cc.mjs render",
+    "themes": "node bin/cc.mjs themes"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.1.11",
+    "@vitejs/plugin-react": "^5.0.0",
+    "prism-react-renderer": "^2.4.1",
+    "puppeteer-core": "^24.0.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1",
+    "tailwindcss": "^4.1.11",
+    "vite": "^7.0.0"
+  }
+}

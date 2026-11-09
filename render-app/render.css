@@ -1,0 +1,11 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+/* clases de Tailwind usadas por los componentes del portafolio */
+@import "./_sources.css";
+@import "@covers/pixel.css";
+
+html, body { margin: 0; background: transparent; }
+/* el CLI renderiza cada lámina a tamaño real: se anula el escalado del editor */
+.cc-stage { position: fixed; left: 0; top: 0; overflow: hidden; }
+.cc-stage > div > div { width: var(--cc-w) !important; height: var(--cc-h) !important; }
+.cc-stage [data-export-canvas="true"] { transform: none !important; }
