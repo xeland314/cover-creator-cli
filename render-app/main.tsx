@@ -22,15 +22,34 @@ const slides = migrateSlides(input.project.data.slides);
 const theme = {
   mode: input.theme ?? input.project.data.mode,
   accent: input.accent ?? input.project.data.accent,
-  showLogo: input.project.data.showLogo ?? false,
-  logoImage: input.project.data.logoImage ?? "",
+  // en modo pixel, sin logo propio se usa el gato pixel-art incluido (public/logo-gato.png)
+  showLogo: input.project.data.showLogo || (input.pixel && !input.project.data.logoImage) || false,
+  logoImage: input.project.data.logoImage || (input.pixel ? "./logo-gato.png" : ""),
   username: input.project.data.username ?? "@xeland314",
 };
 const { width: W, height: H } = input.size;
 
+// En modo pixel el emoji de la portada se "pixeliza": se dibuja en una cuadrícula de 20×20,
+// se reduce la paleta y se amplía sin suavizado, para que no rompa el estilo.
+function pixelEmoji(ch: string, grid = 20): React.ReactNode {
+  const c = document.createElement("canvas");
+  c.width = c.height = grid;
+  const g = c.getContext("2d")!;
+  g.textAlign = "center"; g.textBaseline = "middle";
+  g.font = `${grid * 0.85}px "Noto Color Emoji", "Apple Color Emoji", sans-serif`;
+  g.fillText(ch, grid / 2, grid / 2 + 1);
+  const d = g.getImageData(0, 0, grid, grid);
+  for (let i = 0; i < d.data.length; i += 4) {
+    d.data[i + 3] = d.data[i + 3] > 110 ? 255 : 0; // sin semitransparencias
+    for (let k = 0; k < 3; k++) d.data[i + k] = Math.round(d.data[i + k] / 64) * 64 > 255 ? 255 : Math.round(d.data[i + k] / 64) * 64;
+  }
+  g.putImageData(d, 0, 0);
+  return <img src={c.toDataURL()} alt="" style={{ width: "1em", height: "1em", imageRendering: "pixelated", display: "block" }} />;
+}
+
 function Slide({ index }: { index: number }) {
   const s: any = slides[index];
-  const props = { ...s, theme, previewWidth: W, previewHeight: H };
+  const props = { ...s, ...(input.pixel && s.type === "cover" && s.iconChar ? { iconChar: pixelEmoji(s.iconChar) } : {}), theme, previewWidth: W, previewHeight: H };
   const el = s.type === "cover" ? <BlogCover {...props} /> : s.type === "markdown" ? <BlogMarkdownSlide {...props} /> : s.type === "image" ? <BlogImage {...props} /> : <BlogEnd {...props} />;
   return (
     <div className="cc-stage" data-pixel={input.pixel ? "true" : "false"} style={{ width: W, height: H, ["--cc-w" as any]: `${W}px`, ["--cc-h" as any]: `${H}px`, ["--cc-accent" as any]: ACCENT_HEX[theme.accent] ?? "#f97316" }}>
