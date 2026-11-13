@@ -9,3 +9,8 @@ html, body { margin: 0; background: transparent; }
 .cc-stage { position: fixed; left: 0; top: 0; overflow: hidden; }
 .cc-stage > div > div { width: var(--cc-w) !important; height: var(--cc-h) !important; }
 .cc-stage [data-export-canvas="true"] { transform: none !important; }
+
+/* Inter, igual que el portafolio (variable, subset latin) */
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 100 900; font-display: block; src: url("/fonts/Inter-VariableFont-latin.woff2") format("woff2-variations"); }
+@theme { --font-inter: "Inter", sans-serif; --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif; }
+.cc-stage[data-pixel="false"] { font-family: "Inter", sans-serif; }
